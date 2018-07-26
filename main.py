@@ -1,6 +1,5 @@
 import telegram
-import configparser
-import redis
+#import redis
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
@@ -10,8 +9,7 @@ token = os.environ['TOKEN']
 support_chat_id = os.environ['SUP_CHAT_ID']
 
 # Inicialização do logger
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='log.txt',
-                    level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Conectando à API do Telegram
 # O Updater recupera informações e o Dispatcher conecta comandos
