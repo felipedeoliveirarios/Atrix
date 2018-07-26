@@ -1,1 +1,1 @@
-web: python runAtrix.py 
+worker: python runAtrix.py 
