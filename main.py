@@ -1,6 +1,6 @@
 import telegram
 import os
-#import redis
+import sqlite3
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
