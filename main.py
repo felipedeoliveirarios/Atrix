@@ -5,10 +5,9 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
 
-# Configurações básicas do bot
-# O configparser transforma o .ini em uma lista de parâmetros
-config = configparser.ConfigParser()
-config.read_file(open('config.ini'))
+# Inicialização de parâmetros
+token = os.environ['TOKEN']
+support_chat_id = os.environ['SUP_CHAT_ID']
 
 # Inicialização do logger
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='log.txt',
@@ -16,7 +15,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 # Conectando à API do Telegram
 # O Updater recupera informações e o Dispatcher conecta comandos
-updater = Updater(token=config['DEFAULT']['token'])
+updater = Updater(token=token)
 dispatcher = updater.dispatcher
 
 """#########################################################################"""
@@ -82,7 +81,7 @@ def contato_com_suporte(bot, update):
         else:
             # Se for uma requisição do usuário, o bot a repassa para o
             # grupo de suporte
-            bot.forward_message(chat_id=int(config['DEFAULT']['support_chat_id']), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+            bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
             
             bot.send_message(chat_id=update.message.chat_id, text="Me dá só um minuto.")
 
