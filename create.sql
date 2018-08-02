@@ -12,10 +12,12 @@ CREATE TABLE IF NOT EXISTS FICHAS (
         Identidade_Secreta BOOLEAN,
         Sexo CHAR,
         Idade INT,
-        Altura FLOAT
-        Peso FLOAT
+        Altura FLOAT,
+        Peso FLOAT,
         Tamanho INT,
         Olhos CHAR(16),
+	Pele CHAR(16),
+	Cabelo CHAR(16),
         Base_de_Operações CHAR(32),
         Nível_de_Poder INT,
         Pontos_de_Poder INT,
@@ -43,7 +45,7 @@ CREATE TABLE IF NOT EXISTS HABILIDADES (
 	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador)
 );
-CREATE TABLE IF NOT EXISTS SALVAMENTO (
+CREATE TABLE IF NOT EXISTS SALVAMENTOS (
         Id_Grupo INTEGER,
         Id_Jogador INTEGER NOT NULL,
         Fortitude_Grad INT,
@@ -64,18 +66,18 @@ CREATE TABLE IF NOT EXISTS FEITOS (
         Bonus CHAR(32),
 	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
 	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
-	PRIMARY KEY(Id_grupo, Id_jogador)
+	PRIMARY KEY(Id_grupo, Id_jogador, Nome)
 );
 CREATE TABLE IF NOT EXISTS PERICIAS (
         Id_Grupo INTEGER,
         Id_Jogador INTEGER,
         Nome CHAR(32),
-        Atributo_Bonus CHAR(3),
+        Bonus_Habilidade CHAR(3),
         Graduações INT,
         Bonus INT,
 	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
 	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
-	PRIMARY KEY(Id_grupo, Id_jogador)
+	PRIMARY KEY(Id_grupo, Id_jogador, Nome)
 );
 CREATE TABLE IF NOT EXISTS DESVANTAGENS (
         Id_Grupo INTEGER,
@@ -85,7 +87,7 @@ CREATE TABLE IF NOT EXISTS DESVANTAGENS (
         Intensidade INT,
 	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
 	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
-	PRIMARY KEY(Id_grupo, Id_jogador)
+	PRIMARY KEY(Id_grupo, Id_jogador, Descrição)
 );
 CREATE TABLE IF NOT EXISTS PODERES_E_DISPOSITIVOS (
         Id_Grupo INTEGER,
@@ -105,5 +107,5 @@ CREATE TABLE IF NOT EXISTS PODERES_E_DISPOSITIVOS (
         Falhas INT,
 	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
 	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
-	PRIMARY KEY(Id_grupo, Id_jogador)
+	PRIMARY KEY(Id_grupo, Id_jogador, Nome)
 );
