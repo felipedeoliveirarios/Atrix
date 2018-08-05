@@ -59,7 +59,6 @@ def suporte(bot, update):
     """
     bot.send_message(chat_id=update.message.chat_id,
                      text="Qual é o problema que você está tendo?")
-    support_flag = True
 
 """-------------------------------------------------------------------------"""
 
@@ -70,18 +69,17 @@ def contato_com_suporte(bot, update):
         Se a mensagem é uma resposta do suporte ao usuário, o bot a envia ao usuário.
         Se a mensagem é do usuário, o bot a repassa para o grupo de suporte.
     """
-    if support_flag:
-        if update.message.reply_to_message and \
-           update.message.reply_to_message.forward_from:
-            # Se for uma resposta do suporte ao usuário, o bot responde ao usuário
-            bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text=update.message.text)
-            support_flag = False
-        else:
-            # Se for uma requisição do usuário, o bot a repassa para o
-            # grupo de suporte
-            bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+    if update.message.reply_to_message and \
+        update.message.reply_to_message.forward_from:
+        # Se for uma resposta do suporte ao usuário, o bot responde ao usuário
+        bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text=update.message.text)
+        support_flag = False
+    else:
+        # Se for uma requisição do usuário, o bot a repassa para o
+        # grupo de suporte
+        bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
             
-            bot.send_message(chat_id=update.message.chat_id, text="Só um minuto...")
+        bot.send_message(chat_id=update.message.chat_id, text="Só um minuto...")
 """-------------------------------------------------------------------------"""
 def criar_bd_grupo(bot, update):
     # Se o comando for utilizado em um grupo
