@@ -2,6 +2,7 @@ import sys
 import psycopg2
 import os
 
+# Inicialização de parâmetros
 database = os.environ['DATABASE_URL']
 
 # Cria um banco de dados Postgres para armazenar informações, caso não exista.
@@ -30,7 +31,7 @@ def confereUsuario(id_usuário, id_grupo):
     result = cursor.fetchall()
     cursor.execute('''  SELECT Id_Grupo, Id_Jogador
                         FROM FICHAS
-                        WHERE Id_Grupo = %s AND Id_Jogador = %s''',
+                        WHERE Id_Grupo = %s AND Id_Jogador = %s;''',
                     id_usuário, id_grupo)
     if len(result) > 0:
         connection.close()
@@ -57,23 +58,23 @@ def criaFicha(id_grupo, id_jogador, nome='', identidade_civil='',
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO FICHAS VALUES(%s, %s, %s, %s,
                                                 %s, %s, %s, %s, %s, %s,
-                                                %s, %s, %s, %s, %s, %s, %s, %s)''',
+                                                %s, %s, %s, %s, %s, %s, %s, %s);''',
                     id_grupo, id_jogador, nome, identidade_civil,
                     identidade_secreta, sexo, idade, altura, peso, tamanho,
                     olhos, pele, cabelo, base, nivel, pontos, ataques, defesa)
     # Insere os valores das informações básicas do personagem
     cursor.execute('''INSERT INTO HABILIDADES VALUES(%s, %s,
                                                      %s, %s, %s, %s, %s, %s,
-                                                     %s, %s, %s, %s, %s, %s)''',
+                                                     %s, %s, %s, %s, %s, %s);''',
                    id_grupo, id_jogador,
                    10, 10, 10, 10, 10, 10,
                    0, 0, 0, 0, 0, 0)
     # Insere os valores de habilidades do personagem
     cursor.execute('''INSERT INTO SALVAMENTOS VALUES(%s, %s,
                                                      %s, %s, %s,
-                                                     %s, %s, %s, %s''',
+                                                     %s, %s, %s, %s);''',
                    id_grupo, id_jogador,
-                   0, 0, 0
+                   0, 0, 0,
                    0, 0, 0, 0)
     # Insere os valores de salvamentos do personagem
     connection.commit()
@@ -84,7 +85,7 @@ def addFeito(id_grupo, id_jogador, nome, bonus=''):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO FEITOS VALUES(%s, %s
-                                                %s, %s''',
+                                                %s, %s);''',
                    id_grupo, id_jogador,
                    nome, bonus)
     connection.commit()
@@ -95,7 +96,7 @@ def addPericia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO PERICIAS VALUES(%s, %s,
-                                                  %s, %s, %s, %s''',
+                                                  %s, %s, %s, %s);''',
                    id_grupo, id_jogador,
                    nome, habilidade, grad, bonus)
     connection.commit()
@@ -106,9 +107,47 @@ def addDesvantagem(id_grupo, id_jogador, desc, freq, intensidade):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO DESVANTAGENS VALUES(%s, %s,
-                                                  %s, %s, %s''',
+                                                      %s, %s, %s);''',
                    id_grupo, id_jogador,
                    desc, freq, intensidade)
+    connection.commit()
+    connection.close()
+
+# Adiciona um poder na ficha do personagem
+def addPoder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
+             tempo_ativação, tempo_recarga, duração, custo_base, grad,
+             feitos, extras, falhas):
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+    
+    cursor.execute('''INSERT INTO PODERES_E_DISPOSITIVOS VALUES(%s, %s,
+                                                                %s, %s, %s, %s,
+                                                                %s, %s, %s, %s,
+                                                                %s, %s, %s, %s, %s);''',
+                   id_grupo, id_jogador,
+                   nome, descrição, "PODER", ativa,
+                   área_efeito, tempo_ativação, tempo_recarga, duração,
+                   custo_base, grad, feitos, extras, falhas)
+
+    connection.commit()
+    connection.close()
+
+# Adiciona um dispositivo na ficha do personagem
+def addDispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
+                   tempo_ativação, tempo_recarga, duração, custo_base, grad,
+                   feitos, extras, falhas):
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+    
+    cursor.execute('''INSERT INTO PODERES_E_DISPOSITIVOS VALUES(%s, %s,
+                                                                %s, %s, %s, %s,
+                                                                %s, %s, %s, %s,
+                                                                %s, %s, %s, %s, %s);''',
+                   id_grupo, id_jogador,
+                   nome, descrição, "DISPOSITIVO", ativa,
+                   área_efeito, tempo_ativação, tempo_recarga, duração,
+                   custo_base, grad, feitos, extras, falhas)
+
     connection.commit()
     connection.close()
 

@@ -1,13 +1,16 @@
 import telegram
 import os
-import sqlite3
 import logging
+import database
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
 
 # Inicialização de parâmetros
 token = os.environ['TOKEN']
 support_chat_id = os.environ['SUP_CHAT_ID']
+
+# Variáveis globais
+support_flag = False
 
 # Inicialização do logger
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
@@ -16,11 +19,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 # O Updater recupera informações e o Dispatcher conecta comandos
 updater = Updater(token=token)
 dispatcher = updater.dispatcher
-
-"""#########################################################################"""
-
-# Variáveis globais
-support_flag = True
 
 """#########################################################################"""
 
@@ -77,13 +75,35 @@ def contato_com_suporte(bot, update):
            update.message.reply_to_message.forward_from:
             # Se for uma resposta do suporte ao usuário, o bot responde ao usuário
             bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text=update.message.text)
+            support_flag = False
         else:
             # Se for uma requisição do usuário, o bot a repassa para o
             # grupo de suporte
             bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
             
-            bot.send_message(chat_id=update.message.chat_id, text="Me dá só um minuto.")
+            bot.send_message(chat_id=update.message.chat_id, text="Só um minuto...")
+"""-------------------------------------------------------------------------"""
+def criar_bd_grupo(bot, update):
+    # Se o comando for utilizado em um grupo
+    if update.message.chat.type == 'group':
+        # Se o comando for utilizado por um usuário na lista de administradores
+        if update.message.from.id in bot.get_chat_administrators(update.message.chat_id):
+            bot.send_message(chat_id=update.message.chat_id, text=msg)
+            msg = "A base de dados deve ficar aberta para edições?\n"
+            msg += "(Selecionar essa opção permitirá que os jogadores alterem as fichas)"
 
+            # Cria um teclado para a resposta
+            keyboard = [[telegram.KeyboardButton('Sim')], [telegram.KeyboardButton('Não')]]
+            reply_kb_markup = telegram.ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+            # Exibe o teclado
+            bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=reply_kb_markup)
+        # Se o comando não for utilizado por um usuário na lista de administradores
+        else:
+            msg = "Desculpe, mas esse comando deve ser utilizado por um administrador."
+    # Se o comando não for utilizado em um grupo
+    else:
+        msg = "Desculpe, mas esse comando deve ser utilizado em um grupo."
+        bot.send_message(chat_id=update.message.chat_id, text=msg)
 """#########################################################################"""
 
 # Cada CommandHadler liga um comando a uma função
