@@ -87,7 +87,7 @@ def criar_bd_grupo(bot, update):
     # Se o comando for utilizado em um grupo
     if update.message.chat.type == 'group':
         # Se o comando for utilizado por um usuário na lista de administradores
-        if update.message['from'].id in bot.get_chat_administrators(update.message.chat_id):
+        if update['message']['from']['id'] in bot.get_chat_administrators(update.message.chat_id):
             bot.send_message(chat_id=update.message.chat_id, text=msg)
             msg = "A base de dados deve ficar aberta para edições?\n"
             msg += "(Selecionar essa opção permitirá que os jogadores alterem as fichas)"
