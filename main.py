@@ -55,31 +55,25 @@ def desconhecido(bot, update):
 
 def suporte(bot, update):
     """
-        Responde ao pedido de suporte e ativa a flag para a comunicação com o suporte
+        Responde ao pedido de suporte e ativa o handler de contato com o suporte.
     """
-    bot.send_message(chat_id=update.message.chat_id,
+    msg = bot.send_message(chat_id=update.message.chat_id,
                      text="Qual é o problema que você está tendo?")
+    bot.register_next_step_handler(msg, contato_com_suporte)
 
 """-------------------------------------------------------------------------"""
 
 def contato_com_suporte(bot, update):
-    """
-        Faz a ponte entre o grupo/chat de suporte e um local de uso.
+    # Encaminha uma mensagem do usuário para o grupo de suporte.
+    bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)            
+    bot.send_message(chat_id=update.message.chat_id, text="Encaminhei sua mensagem para o suporte. Te aviso assim que tiver uma resposta.")
+"""-------------------------------------------------------------------------"""
 
-        Se a mensagem é uma resposta do suporte ao usuário, o bot a envia ao usuário.
-        Se a mensagem é do usuário, o bot a repassa para o grupo de suporte.
-    """
-    if update.message.reply_to_message and \
-        update.message.reply_to_message.forward_from:
-        # Se for uma resposta do suporte ao usuário, o bot responde ao usuário
-        bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text=update.message.text)
-        support_flag = False
-    else:
-        # Se for uma requisição do usuário, o bot a repassa para o
-        # grupo de suporte
+def resposta_do_suporte(bot, update):
+    # Encaminha uma resposta vinda do grupo de suporte de volta para o usuário.
+    if update.message.reply_to_message and update.message.reply_to_message.forward_from:
+        bot.send_message(chat_id=update.message.chat_id, text="O suporte enviou uma resposta:")
         bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
-            
-        bot.send_message(chat_id=update.message.chat_id, text="Só um minuto...")
 """-------------------------------------------------------------------------"""
 def criar_bd_grupo(bot, update):
     # Se o comando for utilizado em um grupo
@@ -114,6 +108,6 @@ dispatcher.add_handler(support_handler)
 unknown_handler = RegexHandler(r'/.*', desconhecido)
 dispatcher.add_handler(unknown_handler)
 
-support_contact_handler = MessageHandler(Filters.text, contato_com_suporte)
+support_contact_handler = MessageHandler(Filters.text, resposta_do_suporte)
 # O handler de mensagens deve ser o último
 dispatcher.add_handler(support_contact_handler)
