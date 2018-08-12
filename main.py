@@ -9,9 +9,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Regex
 token = os.environ['TOKEN']
 support_chat_id = os.environ['SUP_CHAT_ID']
 
-# Variáveis globais
-support_flag = False
-
 # Inicialização do logger
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
@@ -67,6 +64,7 @@ def contato_com_suporte(bot, update):
     # Encaminha uma mensagem do usuário para o grupo de suporte.
     bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)            
     bot.send_message(chat_id=update.message.chat_id, text="Encaminhei sua mensagem para o suporte. Te aviso assim que tiver uma resposta.")
+    
 """-------------------------------------------------------------------------"""
 
 def resposta_do_suporte(bot, update):
