@@ -61,8 +61,8 @@ def contato_com_suporte(bot, update):
 def resposta_do_suporte(bot, update):
     # Encaminha uma resposta vinda do grupo de suporte de volta para o usuário.
     if update.message.reply_to_message and update.message.reply_to_message.forward_from:
-        bot.send_message(chat_id=update.message.chat_id, text="O suporte enviou uma resposta:")
-        bot.forward_message(chat_id=int(update.message.forward_from.id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+        bot.send_message(chat_id=int(update.message.reply_to_message.forward_from.id), text="O suporte enviou uma resposta:")
+        bot.forward_message(chat_id=int(update.message.reply_to_message.forward_from.id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
 """-------------------------------------------------------------------------"""
 def criar_bd_grupo(bot, update):
     # Se o comando for utilizado em um grupo
