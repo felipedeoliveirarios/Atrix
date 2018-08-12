@@ -10,8 +10,8 @@ token = os.environ['TOKEN']
 support_chat_id = os.environ['SUP_CHAT_ID']
 
 # Inicialização do logger
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    datefmt='%d-%m-%Y %H:%M:%S', level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s | %(name)s | %(levelname)s | %(message)s',
+                    datefmt='%d/%m/%Y, %H:%M:%S', level=logging.DEBUG)
 
 # Conectando à API do Telegram
 # O Updater recupera informações e o Dispatcher conecta comandos
