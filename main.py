@@ -90,7 +90,7 @@ def criar_bd_grupo(bot, update):
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
-support_handler = CommandHandler('suporte', suporte)
+support_handler = CommandHandler('suporte', contato_com_suporte)
 dispatcher.add_handler(support_handler)
 
 unknown_handler = RegexHandler(r'/.*', desconhecido)
