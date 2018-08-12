@@ -50,14 +50,14 @@ def desconhecido(bot, update):
 
 """-------------------------------------------------------------------------"""
 
-def suporte(bot, update):
+#def suporte(bot, update):
     """
         Responde ao pedido de suporte e ativa o handler de contato com o suporte.
     """
-    msg = bot.send_message(chat_id=update.message.chat_id,
-                     text="Qual é o problema que você está tendo?")
-    bot.register_next_step_handler(msg, contato_com_suporte)
-
+    #msg = bot.send_message(chat_id=update.message.chat_id,
+                     #text="Qual é o problema que você está tendo?")
+    #bot.register_next_step_handler(msg, contato_com_suporte)
+    
 """-------------------------------------------------------------------------"""
 
 def contato_com_suporte(bot, update):
