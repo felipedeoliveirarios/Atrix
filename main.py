@@ -79,7 +79,7 @@ def resposta_do_suporte(bot, update):
 """-------------------------------------------------------------------------"""
 
 def cancelar(bot, update):
-    msg = "Tudo bem. Estarei aqui se precisar de mim.
+    msg = "Tudo bem. Estarei aqui se precisar de mim."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
     return ConversationHandler.END
 
