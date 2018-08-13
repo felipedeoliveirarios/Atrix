@@ -100,38 +100,10 @@ def is_group_admin(bot, user_id, group_id):
             is_admin = True
             break
     return is_admin
-    
-"""-------------------------------------------------------------------------"""
-
-def setup_resposta(bot, update):
-    # Trata a resposta do setup de grupo
-    if update.message.text == 'Sim':
-        resp = True
-    elif update.message.text == 'Não':
-        resp = False
-    else:
-        return ConversationHandler.END
-
-    database.criaGrupo(int(update.message.chat_id), int(update['message']['from']['id']), resp)
-    msg = "Tudo certo!"
-    
 
 """-------------------------------------------------------------------------"""
 
-def start(bot, update):
-    #A princípio, exibe uma mensagem de boas vindas e mostra os comandos.
-    #Em seguida, 
-    me = bot.get_me()
-
-    # Mensagem de boas vindas
-    msg = "Olá!\n"
-    msg += "Meu nome é {0}!\n".format(me.first_name)
-    msg += "Fui criada para gerenciar fichas de RPG do sistema Mutantes & Malfeitores.\n"
-    msg += "Digite /ajuda para exibir os comandos."
-    bot.send_message(chat_id=update.message.chat_id, text=msg)
-    msg = "Estou começando o setup básico do banco de dados."
-    database.carregarBD()
-
+def setup(bot, update):
     # Se o comando for utilizado em um grupo
     if update.message.chat.type == 'group':
         # Se já houver uma entrada desse grupo na base de dados
@@ -162,10 +134,45 @@ def start(bot, update):
     else:
         msg = "Já que esse é um chat privado, não precisamos configurar nada relacionado a um grupo."
         return ConversationHandler.END
+"""-------------------------------------------------------------------------"""
+
+def setup_resposta(bot, update):
+    # Trata a resposta do setup de grupo
+    if update.message.text == 'Sim':
+        resp = True
+    elif update.message.text == 'Não':
+        resp = False
+    else:
+        return ConversationHandler.END
+
+    database.criaGrupo(int(update.message.chat_id), int(update['message']['from']['id']), resp)
+    msg = "Tudo certo!"
+    
+
+"""-------------------------------------------------------------------------"""
+
+def start(bot, update):
+    #A princípio, exibe uma mensagem de boas vindas e mostra os comandos.
+    #Em seguida, 
+    me = bot.get_me()
+
+    # Mensagem de boas vindas
+    msg = "Olá!\n"
+    msg += "Meu nome é {0}!\n".format(me.first_name)
+    msg += "Fui criada para gerenciar fichas de RPG do sistema Mutantes & Malfeitores.\n"
+    msg += "Digite /ajuda para exibir os comandos."
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    msg = "Estou iniciando o setup básico do banco de dados nesse momento.\n"
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    
+    database.carregarBD()
+
+    return setup(bot, update)
 
 """#########################################################################"""
 
-# Cada CommandHandler liga um comando a uma função.
+# Cada CommandHadler liga um comando a uma função
+
 # Os ConversationHandler criam um handler com estrutura de máquina de estados
 # que é utilizada para coleta de mais de um dado, ou execuções que exigem
 # que o bot mantenha uma "conversação" com o usuário.
@@ -191,6 +198,7 @@ support_handler = ConversationHandler(
 dispatcher.add_handler(support_handler)
 
 """-------------------------------------------------------------------------"""
+
 SETUP_RESPOSTA = range(1)
 # Handler do setup
 setup_handler = ConversationHandler(
@@ -202,7 +210,8 @@ setup_handler = ConversationHandler(
     per_chat = True,
     conversation_timeout = 60.0
     )
-dispatch.add_handler(setup_handler)
+
+dispatcher.add_handler(setup_handler)
 
 """-------------------------------------------------------------------------"""
 
