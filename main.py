@@ -193,6 +193,7 @@ support_handler = ConversationHandler(
 dispatcher.add_handler(support_handler)
 
 """-------------------------------------------------------------------------"""
+SETUP_RESPOSTA = range(1)
 # Handler do setup
 setup_handler = ConversationHandler(
     entry_points = [CommandHandler('start', start)],
