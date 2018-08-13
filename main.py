@@ -119,13 +119,11 @@ def setup(bot, update):
         # Se o usuário for um administrador do grupo...
         if is_group_admin(bot, update.message.from_user.id, update.message.chat.id):
             msg = "As fichas de personagem associadas a esse grupo devem ficar abertas para edições?\n"
-            bot.send_message(chat_id=update.message.chat_id, text=msg)
-
             # Cria um teclado para a resposta
             keyboard = [[telegram.KeyboardButton('Sim')], [telegram.KeyboardButton('Não')]]
             reply_kb_markup = telegram.ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
             # Exibe o teclado
-            bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=reply_kb_markup)
+            bot.send_message(chat_id=update.message.chat_id, text='', reply_markup=reply_kb_markup)
             return SETUP_RESPOSTA
         # Se o comando não for utilizado por um usuário na lista de administradores
         else:
@@ -144,9 +142,10 @@ def setup_resposta(bot, update):
         resp = False
     else:
         return ConversationHandler.END
-
-    database.criaGrupo(int(update.message.chat_id), int(update.message.from_user.id), resp)
-    msg = "Tudo certo!"
+    if resp is not None:
+        database.criaGrupo(int(update.message.chat_id), int(update.message.from_user.id), resp)
+        msg = "Tudo certo!"
+        bot.send_message(chat_id=update.message.chat_id, text=msg)
     
 
 """-------------------------------------------------------------------------"""
