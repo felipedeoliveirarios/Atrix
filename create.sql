@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS GRUPOS (
-        Id_Grupo INTEGER NOT NULL PRIMARY KEY,
+        Id_Grupo INTEGER NOT NULL PRIMARY KEY UNIQUE,
         Id_Mestre INTEGER,
 	Edição_Aberta BOOLEAN
         
