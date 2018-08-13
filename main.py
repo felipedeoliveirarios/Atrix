@@ -69,29 +69,6 @@ def cancelar(bot, update):
     return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
-def criar_bd_grupo(bot, update):
-    # Se o comando for utilizado em um grupo
-    if update.message.chat.type == 'group':
-        # Se o comando for utilizado por um usuário na lista de administradores
-        if update['message']['from']['id'] in bot.get_chat_administrators(update.message.chat_id):
-            bot.send_message(chat_id=update.message.chat_id, text=msg)
-            msg = "A base de dados deve ficar aberta para edições?\n"
-            msg += "(Selecionar essa opção permitirá que os jogadores alterem as fichas)"
-
-            # Cria um teclado para a resposta
-            keyboard = [[telegram.KeyboardButton('Sim')], [telegram.KeyboardButton('Não')]]
-            reply_kb_markup = telegram.ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
-            # Exibe o teclado
-            bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=reply_kb_markup)
-        # Se o comando não for utilizado por um usuário na lista de administradores
-        else:
-            msg = "Desculpe, mas esse comando deve ser utilizado por um administrador."
-    # Se o comando não for utilizado em um grupo
-    else:
-        msg = "Desculpe, mas esse comando deve ser utilizado em um grupo."
-        bot.send_message(chat_id=update.message.chat_id, text=msg)
-
-"""-------------------------------------------------------------------------"""
 
 def is_group_admin(bot, user_id, group_id):
     is_admin = False
@@ -104,7 +81,7 @@ def is_group_admin(bot, user_id, group_id):
 """-------------------------------------------------------------------------"""
 
 def setup(bot, update):
-    # Se o comando for utilizado em um grupo
+    # Se o setup for iniciado em um grupo
     if update.message.chat.type == 'group':
         # Se já houver uma entrada desse grupo na base de dados
         if database.confereGrupo(update.message.chat_id):
@@ -123,14 +100,16 @@ def setup(bot, update):
             keyboard = [[telegram.KeyboardButton('Sim')], [telegram.KeyboardButton('Não')]]
             reply_kb_markup = telegram.ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
             # Exibe o teclado
-            bot.send_message(chat_id=update.message.chat_id, text='', reply_markup=reply_kb_markup)
+            bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=reply_kb_markup)
             return SETUP_RESPOSTA
-        # Se o comando não for utilizado por um usuário na lista de administradores
+        # Se o setup não for iniciado/respondido por um usuário na lista de administradores.
         else:
-            msg = "Desculpe, mas essa resposta deve ser dada por um administrador."
-    # Se o comando não for utilizado em um grupo
+            msg = "Desculpe, mas é preciso ser um administrador do grupo para concluir o setup."
+            bot.send_message(chat_id=update.message.chat_id, text=msg)
+    # Se o setup não for iniciado em um grupo
     else:
         msg = "Já que esse é um chat privado, não precisamos configurar nada relacionado a um grupo."
+        bot.send_message(chat_id=update.message.chat_id, text=msg)
         return ConversationHandler.END
 """-------------------------------------------------------------------------"""
 
@@ -141,10 +120,14 @@ def setup_resposta(bot, update):
     elif update.message.text == 'Não':
         resp = False
     else:
-        return ConversationHandler.END
+        msg = "Não consigo reconhecer essa resposta.\nPor favor, responda com \"Sim\" ou \"Não\"."
+        bot.send_message(chat_id=update.message.chat_id, text=msg)
+        return SETUP_RESPOSTA
     if resp is not None:
         database.criaGrupo(int(update.message.chat_id), int(update.message.from_user.id), resp)
         msg = "Tudo certo!"
+        bot.send_message(chat_id=update.message.chat_id, text=msg)
+        msg = "Sinta-se à vontade para utilizar o sistema."
         bot.send_message(chat_id=update.message.chat_id, text=msg)
     
 
@@ -159,9 +142,9 @@ def start(bot, update):
     msg = "Olá!\n"
     msg += "Meu nome é {0}!\n".format(me.first_name)
     msg += "Fui criada para gerenciar fichas de RPG do sistema Mutantes & Malfeitores.\n"
-    msg += "Digite /ajuda para exibir os comandos."
+    msg += "Use o comando /ajuda para exibir a lista de comandos."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
-    msg = "Estou iniciando o setup básico do banco de dados nesse momento.\n"
+    msg = "Agora, estou iniciando o setup básico do banco de dados."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
     
     database.carregarBD()
@@ -206,8 +189,7 @@ setup_handler = ConversationHandler(
         SETUP_RESPOSTA: [RegexHandler('.*', setup_resposta)],
     },
     fallbacks = [],
-    per_chat = True,
-    conversation_timeout = 60.0
+    per_chat = True
     )
 
 dispatcher.add_handler(setup_handler)
