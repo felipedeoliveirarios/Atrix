@@ -21,6 +21,8 @@ def carregarBD():
     # Encerra a conexão.
     connection.close()
 
+"""-------------------------------------------------------------------------"""
+
 # Confere se o usuário já tem uma ficha criada.
 def confereUsuario(id_usuário, id_grupo):
     # Conecta ao banco de dados no arquivo Atrix.
@@ -28,17 +30,37 @@ def confereUsuario(id_usuário, id_grupo):
     # Cria um cursor do banco de dados, que é um iterador que permite navegar
     # e manipular os registros do bd, e o atribui a uma variável.
     cursor = connection.cursor()
-    result = cursor.fetchall()
     cursor.execute('''  SELECT Id_Grupo, Id_Jogador
                         FROM FICHAS
                         WHERE Id_Grupo = %s AND Id_Jogador = %s;''',
-                    id_usuário, id_grupo)
+                    id_grupo, id_usuário)
+    result = cursor.fetchall()
     if len(result) > 0:
         connection.close()
         return True
     else:
         connection.close()
         return False
+
+"""-------------------------------------------------------------------------"""
+
+# Confere se um grupo já tem uma entrada na base de dados
+def confereGrupo(id_grupo):
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+    cursor.execute('''  SELECT Id_Grupo
+                        FROM GRUPOS
+                        WHERE Id_Grupo = %s;''',
+                    id_grupo)
+    result = cursor.fetchall()
+    if len(result) > 0:
+        connection.close()
+        return True
+    else:
+        connection.close()
+        return False
+
+"""-------------------------------------------------------------------------"""
 
 # Cria uma entrada para um grupo no banco de dados.
 def criaGrupo(id_grupo, id_mestre, edição_livre=True):
@@ -47,6 +69,8 @@ def criaGrupo(id_grupo, id_mestre, edição_livre=True):
     cursor.execute('INSERT INTO GRUPOS VALUES(%s, %s, %s);', id_grupo, id_mestre, edição_livre)
     connection.commit()
     connection.close()
+
+"""-------------------------------------------------------------------------"""
 
 # Cria uma entrada para um personagem no banco de dados.
 def criaFicha(id_grupo, id_jogador, nome='', identidade_civil='',
@@ -80,6 +104,8 @@ def criaFicha(id_grupo, id_jogador, nome='', identidade_civil='',
     connection.commit()
     connection.close()
 
+"""-------------------------------------------------------------------------"""
+
 # Adiciona um feito a uma ficha
 def addFeito(id_grupo, id_jogador, nome, bonus=''):
     connection = psycopg2.connect(database)
@@ -90,6 +116,8 @@ def addFeito(id_grupo, id_jogador, nome, bonus=''):
                    nome, bonus)
     connection.commit()
     connection.close()
+
+"""-------------------------------------------------------------------------"""
 
 # Adiciona uma perícia a uma ficha
 def addPericia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
@@ -102,6 +130,8 @@ def addPericia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
     connection.commit()
     connection.close()
 
+"""-------------------------------------------------------------------------"""
+
 # Adiciona uma desvantagem a uma ficha
 def addDesvantagem(id_grupo, id_jogador, desc, freq, intensidade):
     connection = psycopg2.connect(database)
@@ -112,6 +142,8 @@ def addDesvantagem(id_grupo, id_jogador, desc, freq, intensidade):
                    desc, freq, intensidade)
     connection.commit()
     connection.close()
+
+"""-------------------------------------------------------------------------"""
 
 # Adiciona um poder na ficha do personagem
 def addPoder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
@@ -132,6 +164,8 @@ def addPoder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
     connection.commit()
     connection.close()
 
+"""-------------------------------------------------------------------------"""
+
 # Adiciona um dispositivo na ficha do personagem
 def addDispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
                    tempo_ativação, tempo_recarga, duração, custo_base, grad,
@@ -151,3 +185,4 @@ def addDispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
     connection.commit()
     connection.close()
 
+"""-------------------------------------------------------------------------"""
