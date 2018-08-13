@@ -93,7 +93,7 @@ def criar_bd_grupo(bot, update):
 
 """-------------------------------------------------------------------------"""
 
-def is_group_admin(user_id, group_id):
+def is_group_admin(bot, user_id, group_id):
     is_admin = False
     for chat_member in bot.get_chat_administrators(group_id):
         if chat_member.user.id == user_id:
@@ -117,7 +117,7 @@ def setup(bot, update):
             return ConversationHandler.END
         
         # Se o usuário for um administrador do grupo...
-        if is_group_admin(update.message.from_user.id, update.message.chat.id):
+        if is_group_admin(bot, update.message.from_user.id, update.message.chat.id):
             msg = "As fichas de personagem associadas a esse grupo devem ficar abertas para edições?\n"
             bot.send_message(chat_id=update.message.chat_id, text=msg)
 
