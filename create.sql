@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS GRUPOS (
-        Id_Grupo INTEGER NOT NULL PRIMARY KEY UNIQUE,
+        Id_Grupo INTEGER NOT NULL PRIMARY KEY,
         Id_Mestre INTEGER,
 	Edição_Aberta BOOLEAN
         
@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS FICHAS (
         Defesa INT,
 	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
 	PRIMARY KEY(Id_grupo, Id_jogador)
-	UNIQUE(Id_grupo, Id_jogador)
 );
 CREATE TABLE IF NOT EXISTS HABILIDADES (
         Id_Grupo INTEGER,
@@ -42,10 +41,8 @@ CREATE TABLE IF NOT EXISTS HABILIDADES (
         Inteligência_Bonus INT,
         Sabedoria_Bonus INT,
         Carisma_Bonus INT,
-	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
-	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
+	FOREIGN KEY(Id_grupo, Id_jogador) REFERENCES FICHAS(Id_grupo, Id_jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador)
-	UNIQUE(Id_grupo, Id_jogador)
 );
 CREATE TABLE IF NOT EXISTS SALVAMENTOS (
         Id_Grupo INTEGER,
@@ -57,20 +54,16 @@ CREATE TABLE IF NOT EXISTS SALVAMENTOS (
         Fortitude_Bonus INT,
         Reflexo_Bonus INT,
         Vontade_Bonus INT,
-	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
-	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
+	FOREIGN KEY(Id_grupo, Id_jogador) REFERENCES FICHAS(Id_grupo, Id_jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador)
-	UNIQUE(Id_grupo, Id_jogador)
 );
 CREATE TABLE IF NOT EXISTS FEITOS (
         Id_Grupo INTEGER,
         Id_Jogador INTEGER NOT NULL,
         Nome CHAR(32),
         Bonus CHAR(32),
-	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
-	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
+	FOREIGN KEY(Id_grupo, Id_jogador) REFERENCES FICHAS(Id_grupo, Id_jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador, Nome)
-	UNIQUE(Id_grupo, Id_jogador, Nome)
 );
 CREATE TABLE IF NOT EXISTS PERICIAS (
         Id_Grupo INTEGER,
@@ -79,10 +72,8 @@ CREATE TABLE IF NOT EXISTS PERICIAS (
         Bonus_Habilidade CHAR(3),
         Graduações INT,
         Bonus INT,
-	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
-	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
+	FOREIGN KEY(Id_grupo, Id_jogador) REFERENCES FICHAS(Id_grupo, Id_jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador, Nome)
-	UNIQUE(Id_grupo, Id_jogador, Nome)
 );
 CREATE TABLE IF NOT EXISTS DESVANTAGENS (
         Id_Grupo INTEGER,
@@ -90,10 +81,8 @@ CREATE TABLE IF NOT EXISTS DESVANTAGENS (
         Descrição CHAR(64),
         Frequência INT,
         Intensidade INT,
-	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
-	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
+	FOREIGN KEY(Id_grupo, Id_jogador) REFERENCES FICHAS(Id_grupo, Id_jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador, Descrição)
-	UNIQUE(Id_grupo, Id_jogador, Descrição)
 );
 CREATE TABLE IF NOT EXISTS PODERES_E_DISPOSITIVOS (
         Id_Grupo INTEGER,
@@ -111,8 +100,6 @@ CREATE TABLE IF NOT EXISTS PODERES_E_DISPOSITIVOS (
         Feitos INT,
         Extras INT,
         Falhas INT,
-	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
-	FOREIGN KEY(Id_Jogador) REFERENCES FICHAS(Id_Jogador),
+	FOREIGN KEY(Id_grupo, Id_jogador) REFERENCES FICHAS(Id_grupo, Id_jogador),
 	PRIMARY KEY(Id_grupo, Id_jogador, Nome)
-	UNIQUE(Id_grupo, Id_jogador, Nome)
 );
