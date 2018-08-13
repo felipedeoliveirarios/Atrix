@@ -164,7 +164,9 @@ def start(bot, update):
     msg += "Digite /ajuda para exibir os comandos."
 
     database.carregarBD()
-    return setup(bot, update)
+
+    retorno = setup(bot, update)
+    return retorno
 
 """#########################################################################"""
 
