@@ -207,7 +207,7 @@ setup_handler = ConversationHandler(
     states={
         SETUP_RESPOSTA: [CallbackQueryHandler(setup_resposta)],
     },
-    fallbacks=[CommandHandler('cancelar', setup_cancelar)]
+    fallbacks=[CommandHandler('cancelar', setup_cancelar)],
     per_chat = True
     )
 
