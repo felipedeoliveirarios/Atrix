@@ -145,7 +145,7 @@ def setup_resposta(bot, update):
     else:
         return ConversationHandler.END
 
-    database.criaGrupo(int(update.message.chat_id), int(update['message']['from']['id']), resp)
+    database.criaGrupo(int(update.message.chat_id), int(update.message.from_user.id), resp)
     msg = "Tudo certo!"
     
 
