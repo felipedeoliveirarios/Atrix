@@ -116,14 +116,14 @@ def setup(bot, update):
 
 def setup_resposta(bot, update):
     # Trata a resposta do setup de grupo
-    if update.callback_query == "Sim":
+    query = update.callback_query
+    if query.data == "Sim":
         resp = True
     else:
         resp = False
-    if resp is not None:
-        database.criaGrupo(int(update.message.chat.id), int(update.chosen_inline_result.from_user.id), resp)
-        update.message.reply_text("Tudo certo!")
-        update.message.reply_text("Sinta-se à vontade para utilizar o sistema.")
+    database.criaGrupo(int(query.message.chat_id), int(query.from_user.id), resp)
+    update.message.reply_text("Tudo certo!")
+    update.message.reply_text("Sinta-se à vontade para utilizar o sistema.")
     
 """-------------------------------------------------------------------------"""
 
