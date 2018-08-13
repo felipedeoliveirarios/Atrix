@@ -33,7 +33,7 @@ def confereUsuario(id_usuário, id_grupo):
     cursor.execute('''  SELECT Id_Grupo, Id_Jogador
                         FROM FICHAS
                         WHERE Id_Grupo = %s AND Id_Jogador = %s;''',
-                    id_grupo, id_usuário)
+                    [id_grupo, id_usuário])
     result = cursor.fetchall()
     if len(result) > 0:
         connection.close()
@@ -51,7 +51,7 @@ def confereGrupo(id_grupo):
     cursor.execute('''  SELECT Id_Grupo
                         FROM GRUPOS
                         WHERE Id_Grupo = %s;''',
-                    id_grupo)
+                    [id_grupo])
     result = cursor.fetchall()
     if len(result) > 0:
         connection.close()
@@ -66,7 +66,7 @@ def confereGrupo(id_grupo):
 def criaGrupo(id_grupo, id_mestre, edição_livre=True):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO GRUPOS VALUES(%s, %s, %s);', id_grupo, id_mestre, edição_livre)
+    cursor.execute('INSERT INTO GRUPOS VALUES(%s, %s, %s);', [id_grupo, id_mestre, edição_livre])
     connection.commit()
     connection.close()
 
@@ -83,23 +83,23 @@ def criaFicha(id_grupo, id_jogador, nome='', identidade_civil='',
     cursor.execute('''INSERT INTO FICHAS VALUES(%s, %s, %s, %s,
                                                 %s, %s, %s, %s, %s, %s,
                                                 %s, %s, %s, %s, %s, %s, %s, %s);''',
-                    id_grupo, id_jogador, nome, identidade_civil,
+                    [id_grupo, id_jogador, nome, identidade_civil,
                     identidade_secreta, sexo, idade, altura, peso, tamanho,
-                    olhos, pele, cabelo, base, nivel, pontos, ataques, defesa)
+                    olhos, pele, cabelo, base, nivel, pontos, ataques, defesa])
     # Insere os valores das informações básicas do personagem
     cursor.execute('''INSERT INTO HABILIDADES VALUES(%s, %s,
                                                      %s, %s, %s, %s, %s, %s,
                                                      %s, %s, %s, %s, %s, %s);''',
-                   id_grupo, id_jogador,
+                   [id_grupo, id_jogador,
                    10, 10, 10, 10, 10, 10,
-                   0, 0, 0, 0, 0, 0)
+                   0, 0, 0, 0, 0, 0])
     # Insere os valores de habilidades do personagem
     cursor.execute('''INSERT INTO SALVAMENTOS VALUES(%s, %s,
                                                      %s, %s, %s,
                                                      %s, %s, %s, %s);''',
-                   id_grupo, id_jogador,
+                   [id_grupo, id_jogador,
                    0, 0, 0,
-                   0, 0, 0, 0)
+                   0, 0, 0, 0])
     # Insere os valores de salvamentos do personagem
     connection.commit()
     connection.close()
@@ -112,8 +112,8 @@ def addFeito(id_grupo, id_jogador, nome, bonus=''):
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO FEITOS VALUES(%s, %s
                                                 %s, %s);''',
-                   id_grupo, id_jogador,
-                   nome, bonus)
+                   [id_grupo, id_jogador,
+                   nome, bonus])
     connection.commit()
     connection.close()
 
@@ -125,8 +125,8 @@ def addPericia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO PERICIAS VALUES(%s, %s,
                                                   %s, %s, %s, %s);''',
-                   id_grupo, id_jogador,
-                   nome, habilidade, grad, bonus)
+                   [id_grupo, id_jogador,
+                   nome, habilidade, grad, bonus])
     connection.commit()
     connection.close()
 
@@ -138,8 +138,8 @@ def addDesvantagem(id_grupo, id_jogador, desc, freq, intensidade):
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO DESVANTAGENS VALUES(%s, %s,
                                                       %s, %s, %s);''',
-                   id_grupo, id_jogador,
-                   desc, freq, intensidade)
+                   [id_grupo, id_jogador,
+                   desc, freq, intensidade])
     connection.commit()
     connection.close()
 
@@ -156,10 +156,10 @@ def addPoder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
                                                                 %s, %s, %s, %s,
                                                                 %s, %s, %s, %s,
                                                                 %s, %s, %s, %s, %s);''',
-                   id_grupo, id_jogador,
+                   [id_grupo, id_jogador,
                    nome, descrição, "PODER", ativa,
                    área_efeito, tempo_ativação, tempo_recarga, duração,
-                   custo_base, grad, feitos, extras, falhas)
+                   custo_base, grad, feitos, extras, falhas])
 
     connection.commit()
     connection.close()
@@ -177,10 +177,10 @@ def addDispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
                                                                 %s, %s, %s, %s,
                                                                 %s, %s, %s, %s,
                                                                 %s, %s, %s, %s, %s);''',
-                   id_grupo, id_jogador,
+                   [id_grupo, id_jogador,
                    nome, descrição, "DISPOSITIVO", ativa,
                    área_efeito, tempo_ativação, tempo_recarga, duração,
-                   custo_base, grad, feitos, extras, falhas)
+                   custo_base, grad, feitos, extras, falhas])
 
     connection.commit()
     connection.close()

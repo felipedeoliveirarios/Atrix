@@ -98,7 +98,7 @@ def setup(bot, update):
     if update.message.chat.type == 'group':
         # Se já houver uma entrada desse grupo na base de dados
         if database.confereGrupo(update.message.chat_id):
-            msg = "Ops! Parece que esse grupo já possui https://www.youtube.com/watch?v=eQOkCQ6CQxAuma entrada na base de dados..."
+            msg = "Ops! Parece que esse grupo já possui uma entrada na base de dados..."
             bot.send_message(chat_id=update.message.chat_id, text=msg)
             msg = "Não se preocupe. A não ser que esse grupo seja recém-criado, não é um problema."
             bot.send_message(chat_id=update.message.chat_id, text=msg)
