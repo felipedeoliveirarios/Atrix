@@ -121,7 +121,7 @@ def setup_resposta(bot, update):
         resp = True
     else:
         resp = False
-    bot.edit_message_reply_markup(query.message.chat_id, query.message.id, reply_markup = None)
+    bot.edit_message_reply_markup(query.message.chat_id, query.message.message_id, reply_markup = None)
     database.criaGrupo(int(query.message.chat_id), int(query.from_user.id), resp)
     msg = "Tudo certo!"
     bot.send_message(chat_id=query.message.chat_id, text=msg)
