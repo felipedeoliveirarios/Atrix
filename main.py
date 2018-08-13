@@ -97,10 +97,11 @@ def setup(bot, update):
         if is_group_admin(bot, update.message.from_user.id, update.message.chat.id):
             msg = "As fichas de personagem associadas a esse grupo devem ficar abertas para edições?\n"
             # Cria um teclado para a resposta
-            keyboard = [[telegram.KeyboardButton('Sim')], [telegram.KeyboardButton('Não')]]
-            reply_kb_markup = telegram.ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+            keyboard = [[telegram.InlineKeyboardButton("Sim", callback_data = "Sim")],
+                        [telegram.InlineKeyboardButton("Não", callback_data = "Não")]]
+            inline_kb_markup = telegram.InlineKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
             # Exibe o teclado
-            bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=reply_kb_markup)
+            bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=inline_kb_markup)
             return SETUP_RESPOSTA
         # Se o setup não for iniciado/respondido por um usuário na lista de administradores.
         else:
@@ -115,12 +116,12 @@ def setup(bot, update):
 
 def setup_resposta(bot, update):
     # Trata a resposta do setup de grupo
-    if update.message.text == 'Sim':
+    if update.callback_query == "Sim":
         resp = True
-    elif update.message.text == 'Não':
+    elif update.callback_query == "Não":
         resp = False
     else:
-        msg = "Não consigo reconhecer essa resposta.\nPor favor, responda com \"Sim\" ou \"Não\"."
+        msg = "Não consigo reconhecer essa resposta.\nPor favor, use os botões para responder."
         bot.send_message(chat_id=update.message.chat_id, text=msg)
         return SETUP_RESPOSTA
     if resp is not None:
@@ -130,6 +131,17 @@ def setup_resposta(bot, update):
         msg = "Sinta-se à vontade para utilizar o sistema."
         bot.send_message(chat_id=update.message.chat_id, text=msg)
     
+"""-------------------------------------------------------------------------"""
+
+def setup_cancelar(bot, update):
+    msg = "Ok, vamos deixar o setup pra outra hora."
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    msg = "Use o comando /start para tentar novamente depois."
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    msg = "(Lembrando que, sem o setup apropriado, não serei capaz de gerenciar as fichas de personagem...)"
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+
+    return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
 
@@ -153,11 +165,13 @@ def start(bot, update):
 
 """#########################################################################"""
 
-# Cada CommandHadler liga um comando a uma função
+# Cada CommandHandler liga um comando a uma função.
 
 # Os ConversationHandler criam um handler com estrutura de máquina de estados
 # que é utilizada para coleta de mais de um dado, ou execuções que exigem
 # que o bot mantenha uma "conversação" com o usuário.
+
+# Os CallbackQueryHandler reagem quando há uma resposta vinda de um teclado inline.
 
 """-------------------------------------------------------------------------"""
 
@@ -166,6 +180,7 @@ def start(bot, update):
 SUPORTE_PERGUNTA_DUVIDA, SUPORTE_ENCAMINHA_RESPOSTA = range(2)
 # Inicializa uma enumeração dos estados para o ConversationHandler.
 # É possível usar inteiros diretamente, mas afeta a legibilidade.
+
 support_handler = ConversationHandler(
     entry_points=[CommandHandler('suporte', suporte)],
 
@@ -181,14 +196,18 @@ dispatcher.add_handler(support_handler)
 
 """-------------------------------------------------------------------------"""
 
+# Esse handler trata do setup inicial quando executado o comando /start.
+
 SETUP_RESPOSTA = range(1)
-# Handler do setup
+# Inicializa uma enumeração dos estados para o ConversationHandler.
+# É possível usar inteiros diretamente, mas afeta a legibilidade.
+
 setup_handler = ConversationHandler(
     entry_points = [CommandHandler('start', start)],
     states={
-        SETUP_RESPOSTA: [RegexHandler('.*', setup_resposta)],
+        SETUP_RESPOSTA: [CallbackQueryHandler(setup_resposta)],
     },
-    fallbacks = [],
+    fallbacks=[CommandHandler('cancelar', setup_cancelar)]
     per_chat = True
     )
 
