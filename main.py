@@ -107,7 +107,7 @@ def setup(bot, update):
             return ConversationHandler.END
         
         # Se o comando for utilizado por um usuário na lista de administradores
-        logging.debug("update.message.from_user =" + str(update.message.from_user) + ', ' + type(update['message']['from']['id']))
+        logging.debug("update.message.from_user.id =" + str(update.message.from_user.id) + ', ' + type(update.message.from_user.id))
         logging.debug("update.message.chat_id =" + str(update.message.chat_id) + ', ' + type(update.message.chat_id))
         chat_admins = bot.get_chat_administrators(update.message.chat_id)
         logging.debug("chat_admins =" + str(chat_admins) + ', ' + type(chat_admins))
