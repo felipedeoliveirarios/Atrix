@@ -166,13 +166,6 @@ def start(bot, update):
     database.carregarBD()
     setup(bot, update)
 
-    # Commands menu
-    main_menu_keyboard = [[telegram.KeyboardButton('/suporte')]]
-    reply_kb_markup = telegram.ReplyKeyboardMarkup(main_menu_keyboard, resize_keyboard=True, one_time_keyboard=True)
-
-    # Send the message with menu
-    bot.send_message(chat_id=update.message.chat_id, text=msg, reply_markup=reply_kb_markup)
-
 """#########################################################################"""
 
 # Cada CommandHadler liga um comando a uma função
