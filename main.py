@@ -124,7 +124,7 @@ PERGUNTA_DUVIDA, ENCAMINHA_RESPOSTA = range(2)
 # Inicializa uma enumeração dos estados para o ConversationHandler.
 # É possível usar inteiros diretamente, mas afeta a legibilidade.
 support_handler = ConversationHandler(
-    entry_points=[CommandHandler('suporte', contato_com_suporte)],
+    entry_points=[CommandHandler('suporte', suporte)],
 
     states={
         PERGUNTA_DUVIDA: [RegexHandler('.*', contato_com_suporte)],
