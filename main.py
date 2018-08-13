@@ -3,7 +3,7 @@ import os
 import logging
 import database
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler, CallbackQueryHandler
 
 # Inicialização de parâmetros
 token = os.environ['TOKEN']
