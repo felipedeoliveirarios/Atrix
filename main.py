@@ -121,7 +121,7 @@ def setup_resposta(bot, update):
     else:
         resp = False
     if resp is not None:
-        database.criaGrupo(int(update.message.chat_id), int(update.message.from_user.id), resp)
+        database.criaGrupo(int(update.message.chat.id), int(update.chosen_inline_result.from_user.id), resp)
         update.message.reply_text("Tudo certo!")
         update.message.reply_text("Sinta-se à vontade para utilizar o sistema.")
     
