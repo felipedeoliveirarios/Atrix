@@ -118,18 +118,12 @@ def setup_resposta(bot, update):
     # Trata a resposta do setup de grupo
     if update.callback_query == "Sim":
         resp = True
-    elif update.callback_query == "Não":
-        resp = False
     else:
-        msg = "Não consigo reconhecer essa resposta.\nPor favor, use os botões para responder."
-        bot.send_message(chat_id=update.message.chat_id, text=msg)
-        return SETUP_RESPOSTA
+        resp = False
     if resp is not None:
         database.criaGrupo(int(update.message.chat_id), int(update.message.from_user.id), resp)
-        msg = "Tudo certo!"
-        bot.send_message(chat_id=update.message.chat_id, text=msg)
-        msg = "Sinta-se à vontade para utilizar o sistema."
-        bot.send_message(chat_id=update.message.chat_id, text=msg)
+        update.message.reply_text("Tudo certo!")
+        update.message.reply_text("Sinta-se à vontade para utilizar o sistema.")
     
 """-------------------------------------------------------------------------"""
 
