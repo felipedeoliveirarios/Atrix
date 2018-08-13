@@ -3,7 +3,7 @@ import os
 import logging
 import database
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler
 
 # Inicialização de parâmetros
 token = os.environ['TOKEN']
@@ -54,6 +54,8 @@ def suporte(bot, update):
     # Inicia o estado de suporte.
     msg = "Qual é o problema que você está encontrando?"
     bot.send_message(chat_id=update.message.chat_id, text=msg)
+    msg = "(Utilize o comando \"\\cancelar\" para cancelar o pedido de suporte)"
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
     return PERGUNTA_DUVIDA
 
 """-------------------------------------------------------------------------"""
@@ -79,8 +81,11 @@ def resposta_do_suporte(bot, update):
 """-------------------------------------------------------------------------"""
 
 def cancelar(bot, update):
+    # Finaliza o ConversationHandler do suporte e avisa o cancelamento no grupo
+    # de suporte.
     msg = "Tudo bem. Estarei aqui se precisar de mim."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
+    bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.message_id)
     return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
