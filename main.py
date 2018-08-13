@@ -48,13 +48,24 @@ def desconhecido(bot, update):
 
     msg = "Desculpe, não consigo entender esse comando."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
+"""-------------------------------------------------------------------------"""
+
+def suporte(bot, update):
+    # Inicia o estado de suporte.
+    msg = "Qual é o problema que você está encontrando?"
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    return PERGUNTA_DUVIDA
 
 """-------------------------------------------------------------------------"""
 
 def contato_com_suporte(bot, update):
     # Encaminha uma mensagem do usuário para o grupo de suporte.
     bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)            
-    bot.send_message(chat_id=update.message.chat_id, text="Encaminhei sua mensagem para o suporte. Te aviso assim que tiver uma resposta.")
+    msg = "Encaminhei sua mensagem para o suporte. Te aviso assim que tiver uma resposta."
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    msg = "Desde já, peço desculpas pelo transtorno"
+    bot.send_message(chat_id=update.message.chat_id, text=msg)
+    return ENCAMINHA_RESPOSTA
     
 """-------------------------------------------------------------------------"""
 
@@ -63,6 +74,7 @@ def resposta_do_suporte(bot, update):
     if update.message.reply_to_message and update.message.reply_to_message.forward_from:
         bot.send_message(chat_id=int(update.message.reply_to_message.forward_from.id), text="O suporte enviou uma resposta:")
         bot.forward_message(chat_id=int(update.message.reply_to_message.forward_from.id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+        return ConversationHandler.END
 """-------------------------------------------------------------------------"""
 def criar_bd_grupo(bot, update):
     # Se o comando for utilizado em um grupo
@@ -91,7 +103,24 @@ def criar_bd_grupo(bot, update):
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
-support_handler = CommandHandler('suporte', contato_com_suporte)
+# Os ConversationHandler criam um handler com estrutura de máquina de estados
+# que é utilizada para coleta de mais de um dado, ou execuções que exigem
+# que o bot mantenha uma "conversação" com o usuário.
+
+PERGUNTA_DUVIDA, ENCAMINHA_RESPOSTA = range(2)
+# Inicializa uma enumeração dos estados para o ConversationHandler.
+# É possível usar inteiros diretamente, mas afeta a legibilidade.
+support_handler = ConversationHandler(
+    entry_points=[CommandHandler('suporte', contato_com_suporte)],
+
+    states={
+        PERGUNTA_DUVIDA: [RegexHandler('.*', contato_com_suporte)],
+        ENCAMINHA_RESPOSTA: [RegexHandler('.*', resposta_do_suporte)],
+        }
+    
+    fallbacks=[CommandHandler('cancelar', cancelar)]
+    )
+
 dispatcher.add_handler(support_handler)
 
 unknown_handler = RegexHandler(r'/.*', desconhecido)
