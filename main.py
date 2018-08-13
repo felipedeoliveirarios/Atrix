@@ -199,7 +199,8 @@ setup_handler = ConversationHandler(
     entry_points = [CommandHandler('start', start)],
     states={
         SETUP_RESPOSTA: [RegexHandler('.*', setup_resposta)],
-    }
+    },
+    fallbacks = []
     )
 
 """-------------------------------------------------------------------------"""
