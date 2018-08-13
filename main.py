@@ -117,7 +117,7 @@ def setup(bot, update):
             return ConversationHandler.END
         
         # Se o usuário for um administrador do grupo...
-        if is_group_admin(update.message.from_user.id, update.message.chat.id)
+        if is_group_admin(update.message.from_user.id, update.message.chat.id):
             msg = "As fichas de personagem associadas a esse grupo devem ficar abertas para edições?\n"
             bot.send_message(chat_id=update.message.chat_id, text=msg)
 
