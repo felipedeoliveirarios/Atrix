@@ -34,7 +34,7 @@ def suporte(bot, update):
     # Inicia o estado de suporte.
     msg = "Qual é o problema que você está encontrando?"
     bot.send_message(chat_id=update.message.chat_id, text=msg)
-    msg = "(Utilize o comando \"\\cancelar\" para cancelar o pedido de suporte)"
+    msg = "(Utilize o comando /cancelar para cancelar o pedido de suporte)"
     bot.send_message(chat_id=update.message.chat_id, text=msg)
     return SUPORTE_PERGUNTA_DUVIDA
 
@@ -182,8 +182,8 @@ support_handler = ConversationHandler(
     entry_points=[CommandHandler('suporte', suporte)],
 
     states={
-        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('.*', contato_com_suporte)],
-        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('.*', resposta_do_suporte)],
+        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('$[^/].*', contato_com_suporte)],
+        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('$[^/].*', resposta_do_suporte)],
         },
     
     fallbacks=[CommandHandler('cancelar', cancelar)]
