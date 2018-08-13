@@ -165,13 +165,13 @@ def start(bot, update):
 
 """#########################################################################"""
 
-# Cada CommandHandler liga um comando a uma função
-
-"""-------------------------------------------------------------------------"""
-
+# Cada CommandHandler liga um comando a uma função.
 # Os ConversationHandler criam um handler com estrutura de máquina de estados
 # que é utilizada para coleta de mais de um dado, ou execuções que exigem
 # que o bot mantenha uma "conversação" com o usuário.
+
+"""-------------------------------------------------------------------------"""
+
 # Esse handler trata das requisições de suporte.
 
 SUPORTE_PERGUNTA_DUVIDA, SUPORTE_ENCAMINHA_RESPOSTA = range(2)
@@ -202,6 +202,7 @@ setup_handler = ConversationHandler(
     per_chat = True,
     conversation_timeout = 60.0
     )
+dispatch.add_handler(setup_handler)
 
 """-------------------------------------------------------------------------"""
 
