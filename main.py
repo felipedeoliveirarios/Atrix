@@ -106,14 +106,8 @@ def setup(bot, update):
             bot.send_message(chat_id=update.message.chat_id, text=msg)
             return ConversationHandler.END
         
-        # Se o comando for utilizado por um usuário na lista de administradores
-        logging.debug("update.message.from_user =" + str(update.message.from_user) + ', ' + str(type(update.message.from_user)))
-        logging.debug("update.message.chat_id =" + str(update.message.chat_id) + ', ' + str(type(update.message.chat_id)))
-        chat_admins = bot.get_chat_administrators(update.message.chat_id)
-        logging.debug("chat_admins =" + str(chat_admins) + ', ' + str(type(chat_admins)))
-        logging.debug("len(chat_admins) =" + str(len(chat_admins)))
-        logging.debug("chat_admins[0] =" + str(chat_admins[0]) + ', ' + str(type(chat_admins[0])))
-        if update.message.from_user in bot.get_chat_administrators(update.message.chat_id):
+        # Se o comando for utilizado pelo criador do grupo
+        if update.message.from_user.status == 'creator':
             msg = "As fichas de personagem associadas a esse grupo devem ficar abertas para edições?\n"
             bot.send_message(chat_id=update.message.chat_id, text=msg)
 
