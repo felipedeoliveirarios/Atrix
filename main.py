@@ -107,12 +107,12 @@ def setup(bot, update):
             return ConversationHandler.END
         
         # Se o comando for utilizado por um usuário na lista de administradores
-        logger.debug("update.message.from.id =" + update['message']['from']['id'] + ', ' + type(update['message']['from']['id']))
-        logger.debug("update.message.chat_id =" + update.message.chat_id + ', ' + type(update.message.chat_id))
+        logging.debug("update.message.from.id =" + update['message']['from']['id'] + ', ' + type(update['message']['from']['id']))
+        logging.debug("update.message.chat_id =" + update.message.chat_id + ', ' + type(update.message.chat_id))
         chat_admins = bot.get_chat_administrators(update.message.chat_id)
-        logger.debug("chat_admins =" + chat_admins + ', ' + type(chat_admins))
-        logger.debug("len(chat_admins) =" + len(chat_admins))
-        logger.debug("chat_admins[0] =" + chat_admins[0] + ', ' + type(chat_admins[0]))
+        logging.debug("chat_admins =" + chat_admins + ', ' + type(chat_admins))
+        logging.debug("len(chat_admins) =" + len(chat_admins))
+        logging.debug("chat_admins[0] =" + chat_admins[0] + ', ' + type(chat_admins[0]))
         if update['message']['from']['id'] in bot.get_chat_administrators(update.message.chat_id):
             msg = "As fichas de personagem associadas a esse grupo devem ficar abertas para edições?\n"
             bot.send_message(chat_id=update.message.chat_id, text=msg)
