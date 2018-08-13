@@ -122,8 +122,10 @@ def setup_resposta(bot, update):
     else:
         resp = False
     database.criaGrupo(int(query.message.chat_id), int(query.from_user.id), resp)
-    update.message.reply_text("Tudo certo!")
-    update.message.reply_text("Sinta-se à vontade para utilizar o sistema.")
+    msg = "Tudo certo!"
+    bot.send_message(chat_id=query.message.chat_id, text=msg)
+    msg = "À partir de agora, sinta-se à vontade para utilizar o sistema."
+    bot.send_message(chat_id=query.message.chat_id, text=msg)
     
 """-------------------------------------------------------------------------"""
 
