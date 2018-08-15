@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS FICHAS (
         Base_de_Operações CHAR(32),
         Nível_de_Poder INT,
         Pontos_de_Poder INT,
+	Pontos_de_Perícia INT,
         Ataques INT,
         Defesa INT,
 	FOREIGN KEY(Id_Grupo) REFERENCES GRUPOS(Id_Grupo),
