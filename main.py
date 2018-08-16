@@ -185,8 +185,8 @@ support_handler = ConversationHandler(
     entry_points=[CommandHandler('suporte', suporte)],
 
     states={
-        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('$[^/].*', contato_com_suporte)],
-        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('$[^/].*', resposta_do_suporte)],
+        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('', contato_com_suporte)],
+        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('', resposta_do_suporte)],
         },
     
     fallbacks=[CommandHandler('cancelar', cancelar)]
