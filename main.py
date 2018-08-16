@@ -55,7 +55,7 @@ def resposta_do_suporte(bot, update):
     # Encaminha uma resposta vinda do grupo de suporte de volta para o usuário.
     if update.message.reply_to_message and update.message.reply_to_message.forward_from:
         bot.send_message(chat_id=int(update.message.reply_to_message.forward_from.id), text="O suporte enviou uma resposta:")
-        bot.forward_message(chat_id=int(update.message.reply_to_message.forward_from.id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+        bot.forward_message(chat_id=imessagnt(update.message.reply_to_message.forward_from.id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)
         return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
@@ -65,7 +65,10 @@ def cancelar(bot, update):
     # de suporte.
     msg = "Tudo bem. Estarei aqui se precisar de mim."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
-    bot.forward_message(chat_id=int(support_chat_id), message_id=update.message.message_id)
+    msg = "O usuário @{} ({} {}) cancelou uma requisição de suporte".format(update.message.from_user.username,
+                                                                           update.message.from_user.first_name,
+                                                                           update.message.from_user.last_name)
+    bot.send_message(chat_id=int(support_chat_id), text=msg)
     return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
