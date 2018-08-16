@@ -65,7 +65,7 @@ def cancelar(bot, update):
     # de suporte.
     msg = "Tudo bem. Estarei aqui se precisar de mim."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
-    bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.message_id)
+    bot.forward_message(chat_id=int(support_chat_id), message_id=update.message.message_id)
     return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
