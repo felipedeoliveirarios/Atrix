@@ -57,7 +57,7 @@ def resposta_do_suporte(bot, update):
     bot.send_message(chat_id=int(update.message.reply_to_message.forward_from.id), text="O suporte enviou uma resposta:")
     bot.forward_message(chat_id=update.message.reply_to_message.forward_from.id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
     return ConversationHandler.END
-  else
+  else:
     return SUPORTE_ENCAMINHA_RESPOSTA
 
 """-------------------------------------------------------------------------"""
