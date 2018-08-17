@@ -42,7 +42,7 @@ def suporte(bot, update):
 
 def contato_com_suporte(bot, update):
     # Encaminha uma mensagem do usuário para o grupo de suporte.
-    bot.forward_message(chat_id=int(support_chat_id), from_chat_id=update.message.chat_id, message_id=update.message.message_id)            
+    bot.forward_message(chat_id=support_chat_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)            
     msg = "Encaminhei sua mensagem para o suporte. Te aviso assim que tiver uma resposta."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
     msg = "Desde já, peço desculpas pelo transtorno"
@@ -53,11 +53,14 @@ def contato_com_suporte(bot, update):
 
 # Encaminha uma resposta vinda do grupo de suporte de volta para o usuário.
 def resposta_do_suporte(bot, update):
+  logging.debug("Entrada na função \"resposta_do_suporte\"")
   if update.message.reply_to_message and update.message.chat.id == support_chat_id:
-    bot.send_message(chat_id=int(update.message.reply_to_message.forward_from.id), text="O suporte enviou uma resposta:")
+    logging.debug("O update é uma resposta do suporte.")
+    bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text="O suporte enviou uma resposta:")
     bot.forward_message(chat_id=update.message.reply_to_message.forward_from.id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
     return ConversationHandler.END
   else:
+    logging.debug("O update não é uma resposta do suporte.")
     return SUPORTE_ENCAMINHA_RESPOSTA
 
 """-------------------------------------------------------------------------"""
@@ -187,8 +190,8 @@ support_handler = ConversationHandler(
     entry_points=[CommandHandler('suporte', suporte)],
 
     states={
-        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('', contato_com_suporte), CommandHandler('cancelar', cancelar)],
-        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('', resposta_do_suporte), CommandHandler('cancelar', cancelar)],
+        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('', contato_com_suporte)],
+        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('', resposta_do_suporte)],
         },
     
     fallbacks=[CommandHandler('cancelar', cancelar)]
