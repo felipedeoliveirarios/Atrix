@@ -75,8 +75,13 @@ def suporte(bot, update):
 
 # Encaminha uma mensagem do usuário para o grupo de suporte.
 def contato_com_suporte(bot, update):
+<<<<<<< HEAD
     bot.forward_message(chat_id=support_chat_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
     
+=======
+    # Encaminha uma mensagem do usuário para o grupo de suporte.
+    bot.forward_message(chat_id=support_chat_id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)            
+>>>>>>> f6f70434579a3f33b30af80d3993d64fd30a91c3
     msg = "Encaminhei sua mensagem para o suporte. Te aviso assim que tiver uma resposta."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
     msg = "Desde já, peço desculpas pelo transtorno"
@@ -87,11 +92,23 @@ def contato_com_suporte(bot, update):
 
 # Encaminha uma resposta vinda do grupo de suporte de volta para o usuário.
 def resposta_do_suporte(bot, update):
+<<<<<<< HEAD
     if update.message.reply_to_message and update.message.reply_to_message.forward_from:
         msg = "O suporte enviou uma resposta:"
         bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text=msg)
         bot.forward_message(chat_id=update.message.reply_to_message.forward_from.id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
         return ConversationHandler.END
+=======
+  logging.debug("Entrada na função \"resposta_do_suporte\"")
+  if update.message.reply_to_message and update.message.chat.id == support_chat_id:
+    logging.debug("O update é uma resposta do suporte.")
+    bot.send_message(chat_id=update.message.reply_to_message.forward_from.id, text="O suporte enviou uma resposta:")
+    bot.forward_message(chat_id=update.message.reply_to_message.forward_from.id, from_chat_id=update.message.chat_id, message_id=update.message.message_id)
+    return ConversationHandler.END
+  else:
+    logging.debug("O update não é uma resposta do suporte.")
+    return SUPORTE_ENCAMINHA_RESPOSTA
+>>>>>>> f6f70434579a3f33b30af80d3993d64fd30a91c3
 
 """-------------------------------------------------------------------------"""
 
@@ -99,6 +116,13 @@ def resposta_do_suporte(bot, update):
 def cancelar(bot, update):
     msg = "Tudo bem. Estarei aqui se precisar de mim."
     bot.send_message(chat_id=update.message.chat_id, text=msg)
+<<<<<<< HEAD
+=======
+    msg = "O usuário @{} ({} {}) cancelou uma requisição de suporte".format(update.message.from_user.username,
+                                                                           update.message.from_user.first_name,
+                                                                           update.message.from_user.last_name)
+    bot.send_message(chat_id=int(support_chat_id), text=msg)
+>>>>>>> f6f70434579a3f33b30af80d3993d64fd30a91c3
     return ConversationHandler.END
 
 """-------------------------------------------------------------------------"""
@@ -341,8 +365,8 @@ support_handler = ConversationHandler(
     entry_points=[CommandHandler('suporte', suporte)],
 
     states={
-        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('$[^/].*', contato_com_suporte)],
-        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('$[^/].*', resposta_do_suporte)],
+        SUPORTE_PERGUNTA_DUVIDA: [RegexHandler('', contato_com_suporte)],
+        SUPORTE_ENCAMINHA_RESPOSTA: [RegexHandler('', resposta_do_suporte)],
         },
     
     fallbacks=[CommandHandler('cancelar', cancelar)]
