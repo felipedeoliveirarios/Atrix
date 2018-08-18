@@ -6,7 +6,7 @@ import os
 database = os.environ['DATABASE_URL']
 
 # Cria um banco de dados Postgres para armazenar informações, caso não exista.
-def carregarBD():
+def carregar_bd():
     # Conecta ao banco de dados na URL especificada
     connection = psycopg2.connect(database)
     # Cria um cursor do banco de dados, que é um iterador que permite navegar
@@ -24,7 +24,7 @@ def carregarBD():
 """-------------------------------------------------------------------------"""
 
 # Confere se o usuário já tem uma ficha criada.
-def confereUsuario(id_usuário, id_grupo):
+def confere_usuário(id_usuário, id_grupo):
     # Conecta ao banco de dados no arquivo Atrix.
     connection = psycopg2.connect(database)
     # Cria um cursor do banco de dados, que é um iterador que permite navegar
@@ -45,7 +45,7 @@ def confereUsuario(id_usuário, id_grupo):
 """-------------------------------------------------------------------------"""
 
 # Confere se um grupo já tem uma entrada na base de dados
-def confereGrupo(id_grupo):
+def confere_grupo(id_grupo):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''  SELECT Id_Grupo
@@ -63,7 +63,7 @@ def confereGrupo(id_grupo):
 """-------------------------------------------------------------------------"""
 
 # Cria uma entrada para um grupo no banco de dados.
-def criaGrupo(id_grupo, id_mestre, edição_livre=True):
+def cria_grupo(id_grupo, id_mestre, edição_livre=True):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('INSERT INTO GRUPOS VALUES(%s, %s, %s);', [id_grupo, id_mestre, edição_livre])
@@ -73,7 +73,7 @@ def criaGrupo(id_grupo, id_mestre, edição_livre=True):
 """-------------------------------------------------------------------------"""
 
 # Cria uma entrada para um personagem no banco de dados.
-def criaFicha(id_grupo, id_jogador, nome='', identidade_civil='',
+def cria_ficha(id_grupo, id_jogador, nome='', identidade_civil='',
               identidade_secreta = True, sexo = '', idade = 0, altura = 0.0,
               peso = 0.0, tamanho = 0, olhos = '', cabelo = '', pele = '',
               base = '', nivel = 0, ataques = 0, defesa = 0):
@@ -107,7 +107,7 @@ def criaFicha(id_grupo, id_jogador, nome='', identidade_civil='',
 """-------------------------------------------------------------------------"""
 
 # Adiciona um feito a uma ficha
-def addFeito(id_grupo, id_jogador, nome, bonus=''):
+def add_feito(id_grupo, id_jogador, nome, bonus=''):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO FEITOS VALUES(%s, %s
@@ -120,7 +120,7 @@ def addFeito(id_grupo, id_jogador, nome, bonus=''):
 """-------------------------------------------------------------------------"""
 
 # Adiciona uma perícia a uma ficha
-def addPericia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
+def add_perícia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO PERICIAS VALUES(%s, %s,
@@ -133,7 +133,7 @@ def addPericia(id_grupo, id_jogador, nome, habilidade, grad, bonus):
 """-------------------------------------------------------------------------"""
 
 # Adiciona uma desvantagem a uma ficha
-def addDesvantagem(id_grupo, id_jogador, desc, freq, intensidade):
+def add_desvantagem(id_grupo, id_jogador, desc, freq, intensidade):
     connection = psycopg2.connect(database)
     cursor = connection.cursor()
     cursor.execute('''INSERT INTO DESVANTAGENS VALUES(%s, %s,
@@ -146,7 +146,7 @@ def addDesvantagem(id_grupo, id_jogador, desc, freq, intensidade):
 """-------------------------------------------------------------------------"""
 
 # Adiciona um poder na ficha do personagem
-def addPoder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
+def add_poder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
              tempo_ativação, tempo_recarga, duração, custo_base, grad,
              feitos, extras, falhas):
     connection = psycopg2.connect(database)
@@ -167,7 +167,7 @@ def addPoder(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
 """-------------------------------------------------------------------------"""
 
 # Adiciona um dispositivo na ficha do personagem
-def addDispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
+def add_dispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
                    tempo_ativação, tempo_recarga, duração, custo_base, grad,
                    feitos, extras, falhas):
     connection = psycopg2.connect(database)
@@ -186,3 +186,36 @@ def addDispositivo(id_grupo, id_jogador, nome, descrição, ativa, área_efeito,
     connection.close()
 
 """-------------------------------------------------------------------------"""
+
+# Retorna uma lista de informações básicas de uma ficha de personagem.
+def get_informação_básica(id_grupo, id_jogador):
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+
+    cursor.execute('''SELECT Nome, Nivel_de_Poder, Identidade_Civil, Sexo, Idade
+                      FROM FICHAS
+                      WHERE Id_grupo = %s AND Id_jogador = %s;''',
+                   id_grupo, id_jogador)
+    
+    result["nome"], result["nivel"], result["ident"], result["sexo"], result["idade"] = cursor.fetchone()
+    for index, value in result.iteritems():
+        if value == "":
+            result[index] = "[NÃO INFORMADO]"
+        if index == "sexo":
+            if result[index] == 'M':
+                result[index] = '♂'
+            else:
+                result[index] = '♀'
+    connection.close()
+    return result
+
+"""-------------------------------------------------------------------------"""
+
+# Exclui uma entrada da tabela FICHAS
+def del_ficha(id_grupo, id_jogador):
+    connection = psycopg2.connect(database)
+    cursor = connection.cursor()
+    cursor.execute('''DELETE FROM FICHAS
+                      WHERE Id_grupo = %s AND Id_Jogador = %s;''',
+                   id_grupo, id_jogador)
+    
